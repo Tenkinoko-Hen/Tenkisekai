@@ -18,22 +18,34 @@ namespace GameServer
     {
         Thread thread;
         bool running = false;
+        NetService network;
         public bool Init()
         {
-            DBService.Instance.Init();
+            network = new NetService();
+            network.Init(8000);
+            HelloWorldService.Instance.Init();
             thread = new Thread(new ThreadStart(this.Update));
+
             return true;
+
+            //SkillBridge.Message.UserRegisterRequest userRegister = new SkillBridge.Message.UserRegisterRequest();
+            //userRegister.Email = "asd";
         }
 
         public void Start()
         {
+
+            network.Start();
             running = true;
             thread.Start();
+            HelloWorldService.Instance.Start();
+
         }
 
 
         public void Stop()
         {
+            network.Stop();
             running = false;
             thread.Join();
         }
